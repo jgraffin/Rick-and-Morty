@@ -7,11 +7,19 @@ const Details = ({ data }: any) => {
   let history = useHistory();
   const { id } = useParams() as any;
   const [character, setCharacter] = useState(id);
+  const [episodes, setEpisodes] = useState([]);
   const handleGoBack = () => {
     history.push("/");
   };
-  const handleEpisode = (event: any) => {
-    console.log(event.target.innerText);
+
+  const getEpisodeData = (urlData: string) => {
+    return new Promise((resolve, rejects) => {
+      fetch(urlData)
+        .then((res) => res.json())
+        .then((data) => {
+          resolve(data);
+        });
+    });
   };
 
   useEffect(() => {
@@ -23,18 +31,25 @@ const Details = ({ data }: any) => {
 
     const current = data.filter((item: any) => {
       if (item.id === Number(id)) {
+        const { name, species, image, gender, status, type } = item;
         setCharacter({
-          name: item.name,
-          species: item.species,
-          image: item.image,
-          gender: item.gender,
-          status: item.status,
+          name,
+          species,
+          image,
+          gender,
+          status,
           location: item.location.name,
           origin: item.origin.name,
-          type: item.type,
-          episode: item.episode.map((item: string) => {
-            return item.split(" ");
-          }),
+          type,
+        });
+
+        item.episode.map(async (url: string) => {
+          try {
+            const getData: any = await getEpisodeData(url);
+            setEpisodes(getData);
+          } catch (error) {
+            console.error(error);
+          }
         });
       }
       return null;
@@ -43,9 +58,10 @@ const Details = ({ data }: any) => {
   }, []);
 
   useEffect(() => {
-    console.log(character);
     localStorage.setItem("characterData", JSON.stringify(character));
-  }, [character]);
+    const dataUrl = episodes;
+    console.log(dataUrl);
+  }, [character, episodes]);
 
   return (
     <Container>
@@ -88,14 +104,7 @@ const Details = ({ data }: any) => {
             <p>
               <strong>Episodes</strong>
             </p>
-            <ul>
-              {character.episode &&
-                character.episode.map((value: string) => (
-                  <li key={value}>
-                    <button onClick={handleEpisode}>{value}</button>
-                  </li>
-                ))}
-            </ul>
+            {/* <ul>{episodes}</ul> */}
           </article>
         </section>
       </ContainerInner>
