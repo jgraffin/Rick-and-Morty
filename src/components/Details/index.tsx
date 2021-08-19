@@ -1,25 +1,33 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, HtmlHTMLAttributes } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { Container, ContainerInner, GoBackButton } from "../../styles/global";
 import { ReactComponent as GoBackIcon } from "./../../images/arrow-left.svg";
 
+type MyDataType = {
+  name: string;
+};
+
 const Details = ({ data }: any) => {
   let history = useHistory();
+  const container = useRef() as React.MutableRefObject<HTMLDivElement>;
   const { id } = useParams() as any;
+  const [counter, setCounter] = useState(0);
   const [character, setCharacter] = useState(id);
-  const [episodes, setEpisodes] = useState([]);
+  const [episodes, setEpisodes] = useState<MyDataType[] | any>([]);
   const handleGoBack = () => {
     history.push("/");
   };
 
   const getEpisodeData = (urlData: string) => {
-    return new Promise((resolve, rejects) => {
-      fetch(urlData)
-        .then((res) => res.json())
-        .then((data) => {
-          resolve(data);
-        });
-    });
+    if (!urlData) {
+      container.current.innerHTML = `<strong>Loading...</strong>`;
+    }
+
+    fetch(urlData)
+      .then((res) => res.json())
+      .then((data: any) => {
+        container.current.innerHTML += `<h4>${data.id} - ${data.name} - ${data.episode} - ${data.air_date}</h4>`;
+      });
   };
 
   useEffect(() => {
@@ -32,25 +40,20 @@ const Details = ({ data }: any) => {
     const current = data.filter((item: any) => {
       if (item.id === Number(id)) {
         const { name, species, image, gender, status, type } = item;
+
         setCharacter({
           name,
           species,
           image,
           gender,
           status,
+          episodes: item.episode.map((url: string) => getEpisodeData(url)),
           location: item.location.name,
           origin: item.origin.name,
           type,
         });
 
-        item.episode.map(async (url: string) => {
-          try {
-            const getData: any = await getEpisodeData(url);
-            setEpisodes(getData);
-          } catch (error) {
-            console.error(error);
-          }
-        });
+        setCounter(item.episode.length);
       }
       return null;
     });
@@ -59,8 +62,6 @@ const Details = ({ data }: any) => {
 
   useEffect(() => {
     localStorage.setItem("characterData", JSON.stringify(character));
-    const dataUrl = episodes;
-    console.log(dataUrl);
   }, [character, episodes]);
 
   return (
@@ -102,9 +103,13 @@ const Details = ({ data }: any) => {
           </article>
           <article>
             <p>
-              <strong>Episodes</strong>
+              <strong>
+                {counter > 1
+                  ? "Episodes this character has been seen"
+                  : "Unique episode this character has been seen"}
+              </strong>
             </p>
-            {/* <ul>{episodes}</ul> */}
+            <div className="container" ref={container}></div>
           </article>
         </section>
       </ContainerInner>
