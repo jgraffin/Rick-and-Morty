@@ -1,33 +1,77 @@
-import { useState, useEffect, useRef, HtmlHTMLAttributes } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { Container, ContainerInner, GoBackButton } from "../../styles/global";
 import { ReactComponent as GoBackIcon } from "./../../images/arrow-left.svg";
 
-type MyDataType = {
-  name: string;
-};
-
 const Details = ({ data }: any) => {
   let history = useHistory();
-  const container = useRef() as React.MutableRefObject<HTMLDivElement>;
+  const containerEpisodes = useRef() as React.MutableRefObject<HTMLDivElement>;
+  const containerLocations = useRef() as React.MutableRefObject<HTMLDivElement>;
   const { id } = useParams() as any;
   const [counter, setCounter] = useState(0);
   const [character, setCharacter] = useState(id);
-  const [episodes, setEpisodes] = useState<MyDataType[] | any>([]);
   const handleGoBack = () => {
     history.push("/");
   };
 
-  const getEpisodeData = (urlData: string) => {
-    if (!urlData) {
-      container.current.innerHTML = `<strong>Loading...</strong>`;
+  const getEpisodeData = (episodeUrlData: string) => {
+    try {
+      fetch(episodeUrlData)
+        .then((res) => res.json())
+        .then((data: { name: string; episode: string; air_date: string }) => {
+          containerEpisodes.current.innerHTML += `
+          <div>
+            <p>
+              <strong>Name:</strong>
+              ${data.name}
+            </p>
+            <p>
+              <strong>Episode:</strong>
+              ${data.episode}
+            </p>
+            <p>
+              <strong>Air date:</strong>
+              ${data.air_date}
+            </p>
+          <div>`;
+        });
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    fetch(urlData)
-      .then((res) => res.json())
-      .then((data: any) => {
-        container.current.innerHTML += `<h4>${data.id} - ${data.name} - ${data.episode} - ${data.air_date}</h4>`;
-      });
+  const getLocationData = (locationUrlData: string) => {
+    try {
+      fetch(locationUrlData)
+        .then((res) => res.json())
+        .then((data: any) => {
+          containerLocations.current.innerHTML += `
+          <p>
+            <strong>Name:</strong>
+            ${data.name}
+          </p>
+          <p>
+            <strong>Dimension:</strong>
+            ${data.dimension}
+          </p>
+          <p>
+            <strong>Type:</strong>
+            ${data.type}
+          </p>`;
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const switchText = (size: boolean) => {
+    return size
+      ? "Episodes this character has been seen"
+      : "Unique episode this character has been seen";
+  };
+
+  const getType = (type: string) => {
+    return type ? character.type : "Not defined";
   };
 
   useEffect(() => {
@@ -39,9 +83,16 @@ const Details = ({ data }: any) => {
 
     const current = data.filter((item: any) => {
       if (item.id === Number(id)) {
-        const { name, species, image, gender, status, type } = item;
-
-        setCharacter({
+        const {
+          name,
+          species,
+          image,
+          gender,
+          status,
+          type,
+          location: { url },
+        } = item;
+        const currentCharacterData = {
           name,
           species,
           image,
@@ -51,18 +102,24 @@ const Details = ({ data }: any) => {
           location: item.location.name,
           origin: item.origin.name,
           type,
-        });
+          url,
+        };
 
+        setCharacter(currentCharacterData);
         setCounter(item.episode.length);
+
+        if (character.url) {
+          getLocationData(character.url);
+        }
       }
       return null;
     });
     return current;
-  }, []);
+  }, [data, id, character.url]);
 
   useEffect(() => {
     localStorage.setItem("characterData", JSON.stringify(character));
-  }, [character, episodes]);
+  }, [character]);
 
   return (
     <Container>
@@ -95,21 +152,19 @@ const Details = ({ data }: any) => {
             </p>
             <p>
               <strong>Type</strong>
-              <span>{character.type ? character.type : "Not defined"}</span>
+              <span>{getType(character.type)}</span>
             </p>
             <figure>
               <img src={character.image} alt={character.name} />
             </figure>
           </article>
           <article>
-            <p>
-              <strong>
-                {counter > 1
-                  ? "Episodes this character has been seen"
-                  : "Unique episode this character has been seen"}
-              </strong>
-            </p>
-            <div className="container" ref={container}></div>
+            <h3>{switchText(counter > 1)}</h3>
+            <div className="container" ref={containerEpisodes}></div>
+          </article>
+          <article>
+            <h3>Location</h3>
+            <div className="container" ref={containerLocations}></div>
           </article>
         </section>
       </ContainerInner>
