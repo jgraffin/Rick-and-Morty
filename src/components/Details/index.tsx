@@ -15,25 +15,24 @@ const Details = ({ data }: any) => {
   };
 
   const getEpisodeData = (episodeUrlData: string) => {
+    console.log(episodeUrlData);
     try {
       fetch(episodeUrlData)
         .then((res) => res.json())
         .then((data: { name: string; episode: string; air_date: string }) => {
           containerEpisodes.current.innerHTML += `
-          <div>
-            <p>
-              <strong>Name:</strong>
-              ${data.name}
-            </p>
-            <p>
-              <strong>Episode:</strong>
-              ${data.episode}
-            </p>
-            <p>
-              <strong>Air date:</strong>
-              ${data.air_date}
-            </p>
-          <div>`;
+            <ul class='list-specification'>
+              <li>
+                <span>${data.name}</span>
+              </li>
+              <li>
+                <span>${data.episode}</span>
+              </li>
+              <li>
+                <span>${data.air_date}</span>
+              </li>
+            </ul>
+          `;
         });
     } catch (error) {
       console.log(error);
@@ -46,18 +45,17 @@ const Details = ({ data }: any) => {
         .then((res) => res.json())
         .then((data: any) => {
           containerLocations.current.innerHTML += `
-          <p>
-            <strong>Name:</strong>
-            ${data.name}
-          </p>
-          <p>
-            <strong>Dimension:</strong>
-            ${data.dimension}
-          </p>
-          <p>
-            <strong>Type:</strong>
-            ${data.type}
-          </p>`;
+          <ul class='list-specification'>
+            <li>
+              <span>${data.name}</span>
+            </li>
+            <li>
+              <span>${data.dimension}</span>
+            </li>
+            <li>
+              <span>${data.type}</span>
+            </li>
+          </ul>`;
         });
     } catch (error) {
       console.log(error);
@@ -66,8 +64,8 @@ const Details = ({ data }: any) => {
 
   const switchText = (size: boolean) => {
     return size
-      ? "Episodes this character has been seen"
-      : "Unique episode this character has been seen";
+      ? "These are the episodes where the character has been seen"
+      : "Episode where the character has been seen";
   };
 
   const getType = (type: string) => {
@@ -108,7 +106,7 @@ const Details = ({ data }: any) => {
         setCharacter(currentCharacterData);
         setCounter(item.episode.length);
 
-        if (character.url) {
+        if (character?.url) {
           getLocationData(character.url);
         }
       }
@@ -130,40 +128,64 @@ const Details = ({ data }: any) => {
         <section>
           <h1>{character.name}</h1>
           <article>
-            <p>
-              <strong>Specie</strong>
-              <span>{character.species}</span>
-            </p>
-            <p>
-              <strong>Gender</strong>
-              <span>{character.gender}</span>
-            </p>
-            <p>
-              <strong>Status</strong>
-              <span>{character.status}</span>
-            </p>
-            <p>
-              <strong>Location</strong>
-              <span>{character.location}</span>
-            </p>
-            <p>
-              <strong>Origin</strong>
-              <span>{character.origin}</span>
-            </p>
-            <p>
-              <strong>Type</strong>
-              <span>{getType(character.type)}</span>
-            </p>
+            <ul className="list-specification">
+              <li>
+                <strong>Specie</strong>
+                <span>{character.species}</span>
+              </li>
+              <li>
+                <strong>Gender</strong>
+                <span>{character.gender}</span>
+              </li>
+              <li>
+                <strong>Status</strong>
+                <span>{character.status}</span>
+              </li>
+              <li>
+                <strong>Location</strong>
+                <span>{character.location}</span>
+              </li>
+              <li>
+                <strong>Origin</strong>
+                <span>{character.origin}</span>
+              </li>
+              <li>
+                <strong>Type</strong>
+                <span>{getType(character.type)}</span>
+              </li>
+            </ul>
             <figure>
               <img src={character.image} alt={character.name} />
             </figure>
           </article>
           <article>
             <h3>{switchText(counter > 1)}</h3>
+            <ul className="list-specification list-specification--head">
+              <li>
+                <strong>Name</strong>
+              </li>
+              <li>
+                <strong>Episode</strong>
+              </li>
+              <li>
+                <strong>Air date</strong>
+              </li>
+            </ul>
             <div className="container" ref={containerEpisodes}></div>
           </article>
           <article>
             <h3>Location</h3>
+            <ul className="list-specification list-specification--head">
+              <li>
+                <strong>Name</strong>
+              </li>
+              <li>
+                <strong>Dimension</strong>
+              </li>
+              <li>
+                <strong>Type</strong>
+              </li>
+            </ul>
             <div className="container" ref={containerLocations}></div>
           </article>
         </section>

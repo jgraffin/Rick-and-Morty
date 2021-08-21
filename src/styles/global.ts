@@ -72,34 +72,83 @@ export const ContainerInner = styled.div`
 
   section {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
   }
 
   article {
     display: block;
+    padding-right: 2.5rem;
 
-    p {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.5;
-      font-size: 0.8rem;
+    &:first-of-type {
+      ul.list-specification {
+        &:first-child {
+          border: 0;
+        }
+      }
+    }
+
+    &:last-of-type {
+      h3 {
+        &:last-of-type {
+          margin-top: 2rem;
+        }
+      }
+    }
+
+    &:nth-child(3) {
+      ul.list-specification {
+        &:hover {
+          background-color: #f4f4f4;
+        }
+      }
+    }
+
+    ul.list-specification {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 0.5rem 1.5rem;
+      grid-gap: 1rem;
+      border: 1px dashed #ccc;
+      border-radius: 8px;
+      transition: ease-in-out 0.2s;
       margin-bottom: 0.5rem;
 
-      strong {
-        text-transform: uppercase;
+      &--head {
+        border: 0;
+        background-color: #f4f4f4;
       }
 
-      span {
-        font-size: 0.9rem;
+      li {
+        line-height: 1.4;
+
+        strong {
+          display: block;
+          font-size: 0.7rem;
+          text-transform: uppercase;
+        }
+
+        span {
+          font-size: 0.8rem;
+        }
       }
+    }
+
+    h3 {
+      font-size: 1rem;
+      background: hsl(185, 75%, 39%);
+      display: block;
+      padding: 1rem 1.5rem;
+      border-radius: 90px;
+      margin: 5rem 0 2rem;
+      color: #ffffff;
     }
   }
 
   figure {
     position: absolute;
     right: 0;
-    bottom: 0;
-    border-top-left-radius: 45px;
+    top: 0;
+    border-bottom-left-radius: 45px;
     overflow: hidden;
 
     img {
