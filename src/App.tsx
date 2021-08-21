@@ -41,7 +41,6 @@ const App: React.FC = () => {
         try {
           const data = await response.json();
           setState(data.results);
-          console.log(data.results);
         } catch (error) {
           console.error("error", error);
         }
