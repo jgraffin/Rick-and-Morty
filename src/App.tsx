@@ -10,27 +10,7 @@ import {
 import Cards from "./components/Card/Cards";
 import CardItem from "./components/Card/CardItem";
 import Details from "./components/Details";
-
-type CharactersListType = {
-  created: string;
-  episode: [];
-  gender: string;
-  id: number;
-  image: string;
-  location: {
-    name: string;
-    url: string;
-  };
-  name: string;
-  origin: {
-    name: string;
-    url: string;
-  };
-  species: string;
-  status: string;
-  type: string;
-  url: string;
-};
+import { CharactersListType } from "./interface/CharactersListType";
 
 const App: React.FC = () => {
   const [state, setState] = useState<CharactersListType[]>([]);

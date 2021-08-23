@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { Container, ContainerInner, GoBackButton } from "../../styles/global";
 import { ReactComponent as GoBackIcon } from "./../../images/arrow-left.svg";
+import { CharactersListType } from "../../interface/CharactersListType";
+import { EpisodeTypeProps } from "../../interface/EpisodesType";
 
 const Details = ({ data }: any) => {
   let history = useHistory();
@@ -15,11 +17,10 @@ const Details = ({ data }: any) => {
   };
 
   const getEpisodeData = (episodeUrlData: string) => {
-    console.log(episodeUrlData);
     try {
       fetch(episodeUrlData)
         .then((res) => res.json())
-        .then((data: { name: string; episode: string; air_date: string }) => {
+        .then((data: EpisodeTypeProps) => {
           containerEpisodes.current.innerHTML += `
             <ul class='list-specification'>
               <li>
@@ -79,7 +80,7 @@ const Details = ({ data }: any) => {
       setCharacter(JSON.parse(characterStorage));
     }
 
-    const current = data.filter((item: any) => {
+    const current = data.filter((item: CharactersListType) => {
       if (item.id === Number(id)) {
         const {
           name,
@@ -88,7 +89,7 @@ const Details = ({ data }: any) => {
           gender,
           status,
           type,
-          location: { url },
+          location: { url: urlLocation },
         } = item;
         const currentCharacterData = {
           name,
@@ -96,24 +97,28 @@ const Details = ({ data }: any) => {
           image,
           gender,
           status,
-          episodes: item.episode.map((url: string) => getEpisodeData(url)),
+          episodes: item.episode,
           location: item.location.name,
           origin: item.origin.name,
           type,
-          url,
+          urlLocation,
         };
 
         setCharacter(currentCharacterData);
         setCounter(item.episode.length);
 
-        if (character?.url) {
-          getLocationData(character.url);
+        if (character?.episodes) {
+          character.episodes.map((url: string) => getEpisodeData(url));
+        }
+
+        if (character?.urlLocation) {
+          getLocationData(character.urlLocation);
         }
       }
       return null;
     });
     return current;
-  }, [data, id, character.url]);
+  }, [data, id, character.episodes, character.urlLocation]);
 
   useEffect(() => {
     localStorage.setItem("characterData", JSON.stringify(character));

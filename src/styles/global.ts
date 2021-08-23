@@ -56,7 +56,7 @@ export const ContainerInner = styled.div`
   display: block;
   background-color: #ffffff;
   border-radius: 20px;
-  padding: 8rem 0 0 3rem;
+  padding: 8rem 0 2rem 3rem;
   position: relative;
   box-shadow: 0px 10px 28px rgba(0, 0, 0, 0.2);
   overflow: hidden;
