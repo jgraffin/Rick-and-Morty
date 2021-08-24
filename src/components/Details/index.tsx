@@ -2,75 +2,63 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { Container, ContainerInner, GoBackButton } from "../../styles/global";
 import { ReactComponent as GoBackIcon } from "./../../images/arrow-left.svg";
+import DetailsList from "./detailsList";
 import { CharactersListType } from "../../interface/CharactersListType";
-import { EpisodeTypeProps } from "../../interface/EpisodesType";
+import { EpisodesTypeProps } from "../../interface/EpisodesType";
+import { LocationsTypeProps } from "../../interface/LocationsType";
 
 const Details = ({ data }: any) => {
   let history = useHistory();
   const containerEpisodes = useRef() as React.MutableRefObject<HTMLDivElement>;
   const containerLocations = useRef() as React.MutableRefObject<HTMLDivElement>;
+  const [hasLocation, setHasLocation] = useState(false);
   const { id } = useParams() as any;
   const [counter, setCounter] = useState(0);
   const [character, setCharacter] = useState(id);
+
   const handleGoBack = () => {
     history.push("/");
   };
 
-  const getEpisodeData = (episodeUrlData: string) => {
+  const getUrlData = (urlData: string) => {
     try {
-      fetch(episodeUrlData)
+      fetch(urlData)
         .then((res) => res.json())
-        .then((data: EpisodeTypeProps) => {
-          containerEpisodes.current.innerHTML += `
+        .then((data: EpisodesTypeProps & LocationsTypeProps) => {
+          if (data.air_date !== undefined) {
+            containerEpisodes.current.innerHTML += JSON.stringify(
+              <DetailsList name={data.name} />
+            );
+          }
+
+          if (data.type !== undefined) {
+            containerLocations.current.innerHTML += `
             <ul class='list-specification'>
               <li>
                 <span>${data.name}</span>
               </li>
               <li>
-                <span>${data.episode}</span>
+                <span>${data.dimension}</span>
               </li>
               <li>
-                <span>${data.air_date}</span>
+                <span>${data.type}</span>
               </li>
-            </ul>
-          `;
+            </ul>`;
+          }
         });
     } catch (error) {
       console.log(error);
     }
   };
 
-  const getLocationData = (locationUrlData: string) => {
-    try {
-      fetch(locationUrlData)
-        .then((res) => res.json())
-        .then((data: any) => {
-          containerLocations.current.innerHTML += `
-          <ul class='list-specification'>
-            <li>
-              <span>${data.name}</span>
-            </li>
-            <li>
-              <span>${data.dimension}</span>
-            </li>
-            <li>
-              <span>${data.type}</span>
-            </li>
-          </ul>`;
-        });
-    } catch (error) {
-      console.log(error);
-    }
+  const getCharacterPropertyType = (type: string) => {
+    return type ? character.type : "Not defined";
   };
 
-  const switchText = (size: boolean) => {
+  const switchTitleText = (size: boolean) => {
     return size
       ? "These are the episodes where the character has been seen"
       : "Episode where the character has been seen";
-  };
-
-  const getType = (type: string) => {
-    return type ? character.type : "Not defined";
   };
 
   useEffect(() => {
@@ -107,12 +95,13 @@ const Details = ({ data }: any) => {
         setCharacter(currentCharacterData);
         setCounter(item.episode.length);
 
-        if (character?.episodes) {
-          character.episodes.map((url: string) => getEpisodeData(url));
+        if (character.episodes) {
+          character.episodes.map((url: string) => getUrlData(url));
         }
 
-        if (character?.urlLocation) {
-          getLocationData(character.urlLocation);
+        if (character.urlLocation) {
+          setHasLocation(true);
+          getUrlData(character.urlLocation);
         }
       }
       return null;
@@ -156,7 +145,7 @@ const Details = ({ data }: any) => {
               </li>
               <li>
                 <strong>Type</strong>
-                <span>{getType(character.type)}</span>
+                <span>{getCharacterPropertyType(character.type)}</span>
               </li>
             </ul>
             <figure>
@@ -164,7 +153,7 @@ const Details = ({ data }: any) => {
             </figure>
           </article>
           <article>
-            <h3>{switchText(counter > 1)}</h3>
+            <h3>{switchTitleText(counter > 1)}</h3>
             <ul className="list-specification list-specification--head">
               <li>
                 <strong>Name</strong>
@@ -178,21 +167,24 @@ const Details = ({ data }: any) => {
             </ul>
             <div className="container" ref={containerEpisodes}></div>
           </article>
-          <article>
-            <h3>Location</h3>
-            <ul className="list-specification list-specification--head">
-              <li>
-                <strong>Name</strong>
-              </li>
-              <li>
-                <strong>Dimension</strong>
-              </li>
-              <li>
-                <strong>Type</strong>
-              </li>
-            </ul>
-            <div className="container" ref={containerLocations}></div>
-          </article>
+
+          {hasLocation && (
+            <article>
+              <h3>Location</h3>
+              <ul className="list-specification list-specification--head">
+                <li>
+                  <strong>Name</strong>
+                </li>
+                <li>
+                  <strong>Dimension</strong>
+                </li>
+                <li>
+                  <strong>Type</strong>
+                </li>
+              </ul>
+              <div className="container" ref={containerLocations}></div>
+            </article>
+          )}
         </section>
       </ContainerInner>
     </Container>
