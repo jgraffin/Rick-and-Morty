@@ -150,19 +150,33 @@ const Details = ({ data }: any) => {
             </figure>
           </article>
           <article className="character-acts">
-            <h3>{switchTitleText(counter > 1)}</h3>
-            <ul className="list-specification list-specification--head">
-              <li>
-                <strong>Name</strong>
-              </li>
-              <li>
-                <strong>Episode</strong>
-              </li>
-              <li>
-                <strong>Air date</strong>
-              </li>
-            </ul>
-            <div className="container" ref={containerEpisodes}></div>
+            <nav className="m-accordion">
+              <nav className="m-accordion__drop-down-menu">
+                <input
+                  type="checkbox"
+                  className="activate"
+                  id="acc-01"
+                  name="acc-01"
+                />
+                <label htmlFor="acc-01" className="menu-title">
+                  {switchTitleText(counter > 1)}
+                </label>
+                <div className="drop-down">
+                  <ul className="list-specification list-specification--head">
+                    <li>
+                      <strong>Name</strong>
+                    </li>
+                    <li>
+                      <strong>Episode</strong>
+                    </li>
+                    <li>
+                      <strong>Air date</strong>
+                    </li>
+                  </ul>
+                  <div className="container" ref={containerEpisodes}></div>
+                </div>
+              </nav>
+            </nav>
           </article>
 
           {hasLocation && (

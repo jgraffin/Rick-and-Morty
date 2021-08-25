@@ -139,6 +139,114 @@ export const ContainerInner = styled.div`
       margin: 5rem 0 2rem;
       color: #ffffff;
     }
+
+    .m-accordion {
+      display: block;
+      width: 100%;
+
+      &__drop-down-menu {
+        display: block;
+        margin-bottom: 30px;
+
+        p {
+          margin: 6px 0;
+          position: relative;
+
+          + h5 {
+            margin-top: 30px;
+          }
+        }
+      }
+
+      .menu-title {
+        cursor: pointer;
+        font-size: 1rem;
+        background: hsl(185, 75%, 39%);
+        display: block;
+        padding: 1rem 1.5rem;
+        border-radius: 90px;
+        margin: 5rem 0 2rem;
+        color: #ffffff;
+      }
+
+      @keyframes slideOpen {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .activate {
+        animation: slideOpen ease-in-out 0.6s forwards;
+        display: none;
+        position: absolute;
+        cursor: pointer;
+        width: 100%;
+        margin: 0 0 0 -15px;
+      }
+
+      .drop-down {
+        max-height: 0;
+        overflow: hidden;
+        transition: ease-in-out 0.3s;
+
+        span {
+          display: block;
+          height: 20px;
+          text-align: center;
+          width: 100%;
+        }
+      }
+
+      .activate:checked ~ .drop-down {
+        animation: slideOpen ease-in-out 0.6s forwards;
+        max-height: 100%;
+        margin-top: 46px;
+      }
+
+      .activate {
+        + .menu-title {
+          background-image: url("/assets/images/icons/icon-down.svg");
+          background-repeat: no-repeat;
+          background-position: right center;
+          background-size: 30px;
+          transform: translateY(-15px);
+        }
+
+        &:checked {
+          + .menu-title {
+            background-image: url("/assets/images/icons/icon-up.svg");
+          }
+        }
+      }
+
+      .drop-down,
+      .menu a,
+      .m-accordion__drop-down-menu {
+        -webkit-transition: $cubic-bezier;
+        -moz-transition: $cubic-bezier;
+        -o-transition: $cubic-bezier;
+        transition: $cubic-bezier;
+      }
+
+      .m-accordion__drop-down-menu {
+        border-bottom: 1px solid darken(#000000, 2);
+
+        &:last-of-type {
+          border-bottom: 0;
+        }
+      }
+
+      @supports (-ms-ime-align: auto) {
+        .m-accordion__drop-down-menu {
+          &::after {
+            display: none;
+          }
+        }
+      }
+    }
   }
 
   figure {
