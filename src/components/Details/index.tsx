@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { Container, ContainerInner, GoBackButton } from "../../styles/global";
 import { ReactComponent as GoBackIcon } from "./../../images/arrow-left.svg";
-import DetailsList from "./detailsList";
 import { CharactersListType } from "../../interface/CharactersListType";
 import { EpisodesTypeProps } from "../../interface/EpisodesType";
 import { LocationsTypeProps } from "../../interface/LocationsType";
@@ -26,23 +25,21 @@ const Details = ({ data }: any) => {
         .then((res) => res.json())
         .then((data: EpisodesTypeProps & LocationsTypeProps) => {
           if (data.air_date !== undefined) {
-            containerEpisodes.current.innerHTML += JSON.stringify(
-              <DetailsList name={data.name} />
-            );
+            containerEpisodes.current.innerHTML += `
+              <ul class='list-specification'>
+                <li>${data.name}</li>
+                <li>${data.episode}</li>
+                <li>${data.air_date}</li>
+              </ul>
+            `;
           }
 
           if (data.type !== undefined) {
             containerLocations.current.innerHTML += `
             <ul class='list-specification'>
-              <li>
-                <span>${data.name}</span>
-              </li>
-              <li>
-                <span>${data.dimension}</span>
-              </li>
-              <li>
-                <span>${data.type}</span>
-              </li>
+              <li>${data.name}</li>
+              <li>${data.dimension}</li>
+              <li>${data.type}</li>
             </ul>`;
           }
         });
@@ -152,7 +149,7 @@ const Details = ({ data }: any) => {
               <img src={character.image} alt={character.name} />
             </figure>
           </article>
-          <article>
+          <article className="character-acts">
             <h3>{switchTitleText(counter > 1)}</h3>
             <ul className="list-specification list-specification--head">
               <li>

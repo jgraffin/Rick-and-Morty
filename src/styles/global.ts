@@ -120,15 +120,12 @@ export const ContainerInner = styled.div`
 
       li {
         line-height: 1.4;
+        font-size: 0.8rem;
 
         strong {
           display: block;
           font-size: 0.7rem;
           text-transform: uppercase;
-        }
-
-        span {
-          font-size: 0.8rem;
         }
       }
     }
