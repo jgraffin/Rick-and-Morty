@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import chevron from "../images/chevron.svg";
 
 const slideIn = keyframes`
   from {
@@ -35,7 +36,7 @@ const scaleIn = keyframes`
 
 export const Container = styled.div`
   display: block;
-  margin: 4rem auto;
+  margin: 3rem auto;
   width: 100%;
 
   @media (min-width: 769px) {
@@ -56,11 +57,10 @@ export const ContainerInner = styled.div`
   display: block;
   background-color: #ffffff;
   border-radius: 20px;
-  padding: 8rem 0 2rem 3rem;
+  padding: 5rem 0 2rem 3rem;
   position: relative;
   box-shadow: 0px 10px 28px rgba(0, 0, 0, 0.2);
   overflow: hidden;
-  min-height: 35rem;
 
   h1 {
     display: block;
@@ -81,6 +81,8 @@ export const ContainerInner = styled.div`
 
     &:first-of-type {
       ul.list-specification {
+        width: 800px;
+
         &:first-child {
           border: 0;
         }
@@ -90,7 +92,7 @@ export const ContainerInner = styled.div`
     &:last-of-type {
       h3 {
         &:last-of-type {
-          margin-top: 2rem;
+          margin-top: 1rem;
         }
       }
     }
@@ -100,6 +102,33 @@ export const ContainerInner = styled.div`
         &:hover {
           background-color: #f4f4f4;
         }
+
+        &--head {
+          &::before,
+          &::after {
+            content: "";
+            height: 30px;
+            width: 99%;
+            background: linear-gradient(
+              to bottom,
+              rgba(255, 255, 255, 1) 0%,
+              rgba(255, 255, 255, 0) 100%
+            );
+            position: absolute;
+            bottom: -36px;
+            left: 0;
+          }
+
+          &::after {
+            bottom: auto;
+            top: 180px;
+            background: linear-gradient(
+              to bottom,
+              rgba(255, 255, 255, 0) 0%,
+              rgba(255, 255, 255, 1) 100%
+            );
+          }
+        }
       }
     }
 
@@ -107,7 +136,7 @@ export const ContainerInner = styled.div`
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       padding: 0.5rem 1.5rem;
-      grid-gap: 1rem;
+      grid-gap: 0.5rem;
       border: 1px dashed #ccc;
       border-radius: 8px;
       transition: ease-in-out 0.2s;
@@ -116,6 +145,7 @@ export const ContainerInner = styled.div`
       &--head {
         border: 0;
         background-color: #f4f4f4;
+        position: relative;
       }
 
       li {
@@ -130,14 +160,16 @@ export const ContainerInner = styled.div`
       }
     }
 
-    h3 {
+    h3,
+    .menu-title {
       font-size: 1rem;
-      background: hsl(185, 75%, 39%);
+      background-color: hsl(185, 75%, 39%);
       display: block;
       padding: 1rem 1.5rem;
       border-radius: 90px;
       margin: 5rem 0 2rem;
       color: #ffffff;
+      font-weight: 700;
     }
 
     .m-accordion {
@@ -146,40 +178,17 @@ export const ContainerInner = styled.div`
 
       &__drop-down-menu {
         display: block;
-        margin-bottom: 30px;
-
-        p {
-          margin: 6px 0;
-          position: relative;
-
-          + h5 {
-            margin-top: 30px;
-          }
-        }
       }
 
       .menu-title {
         cursor: pointer;
-        font-size: 1rem;
-        background: hsl(185, 75%, 39%);
-        display: block;
-        padding: 1rem 1.5rem;
-        border-radius: 90px;
-        margin: 5rem 0 2rem;
-        color: #ffffff;
-      }
-
-      @keyframes slideOpen {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
+        margin: 5rem 0 0;
+        position: relative;
+        z-index: 2;
       }
 
       .activate {
-        animation: slideOpen ease-in-out 0.6s forwards;
+        animation: ${slideIn} ease-in-out 0.4s forwards;
         display: none;
         position: absolute;
         cursor: pointer;
@@ -191,6 +200,7 @@ export const ContainerInner = styled.div`
         max-height: 0;
         overflow: hidden;
         transition: ease-in-out 0.3s;
+        z-index: 1;
 
         span {
           display: block;
@@ -198,67 +208,88 @@ export const ContainerInner = styled.div`
           text-align: center;
           width: 100%;
         }
+
+        .container {
+          overflow-y: scroll;
+          overflow-x: hidden;
+          height: 170px;
+          padding: 2rem 1rem 4rem 0;
+        }
       }
 
       .activate:checked ~ .drop-down {
-        animation: slideOpen ease-in-out 0.6s forwards;
-        max-height: 100%;
-        margin-top: 46px;
+        animation: ${slideIn} ease-in-out 0.6s forwards;
+        max-height: 210px;
+        margin-top: 1rem;
       }
 
       .activate {
         + .menu-title {
-          background-image: url("/assets/images/icons/icon-down.svg");
-          background-repeat: no-repeat;
-          background-position: right center;
-          background-size: 30px;
           transform: translateY(-15px);
+          padding-left: 60px;
+          position: relative;
+
+          &::before {
+            content: "";
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            left: 17px;
+            top: 10px;
+            background-image: url(${chevron});
+            background-position: center center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            transition: ease-in-out 0.3s;
+          }
         }
 
         &:checked {
           + .menu-title {
-            background-image: url("/assets/images/icons/icon-up.svg");
+            &::before {
+              transform: rotate(-180deg);
+            }
           }
         }
-      }
 
-      .drop-down,
-      .menu a,
-      .m-accordion__drop-down-menu {
-        -webkit-transition: $cubic-bezier;
-        -moz-transition: $cubic-bezier;
-        -o-transition: $cubic-bezier;
-        transition: $cubic-bezier;
-      }
-
-      .m-accordion__drop-down-menu {
-        border-bottom: 1px solid darken(#000000, 2);
-
-        &:last-of-type {
-          border-bottom: 0;
-        }
-      }
-
-      @supports (-ms-ime-align: auto) {
+        .drop-down,
+        .menu a,
         .m-accordion__drop-down-menu {
-          &::after {
-            display: none;
+          -webkit-transition: $cubic-bezier;
+          -moz-transition: $cubic-bezier;
+          -o-transition: $cubic-bezier;
+          transition: $cubic-bezier;
+        }
+
+        .m-accordion__drop-down-menu {
+          border-bottom: 1px solid darken(#000000, 2);
+
+          &:last-of-type {
+            border-bottom: 0;
+          }
+        }
+
+        @supports (-ms-ime-align: auto) {
+          .m-accordion__drop-down-menu {
+            &::after {
+              display: none;
+            }
           }
         }
       }
     }
-  }
 
-  figure {
-    position: absolute;
-    right: 0;
-    top: 0;
-    border-bottom-left-radius: 45px;
-    overflow: hidden;
+    figure {
+      position: absolute;
+      right: 0;
+      top: 0;
+      border-bottom-left-radius: 45px;
+      overflow: hidden;
 
-    img {
-      display: block;
-      width: 24rem;
+      img {
+        display: block;
+        width: 18rem;
+      }
     }
   }
 `;
@@ -284,15 +315,17 @@ export const GoBackButton = styled.button`
 
   &::before {
     content: "";
-    width: 4rem;
-    height: 4rem;
+    width: 3.5rem;
+    height: 2.5rem;
     background-color: #f4f4f4;
     display: block;
     position: absolute;
     left: 0;
     top: 0;
     z-index: 1;
-    border-radius: 90px;
+    border-top-left-radius: 90px;
+    border-top-right-radius: 90px;
+    border-bottom-right-radius: 90px;
     animation: ${scaleOut} ease-in-out 0.4s forwards;
   }
 

@@ -103,6 +103,7 @@ export const Item = styled.li`
           display: flex;
           flex-direction: column;
           line-height: 1.8;
+          text-align: center;
 
           strong {
             text-transform: uppercase;

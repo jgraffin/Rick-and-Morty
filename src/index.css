@@ -9,3 +9,16 @@
 body {
   background-color: hsl(185, 75%, 39%);
 }
+
+:root ::-webkit-scrollbar {
+  width: 4px;
+}
+
+:root ::-webkit-scrollbar-track {
+  background: #f4f4f4;
+}
+
+:root ::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  border: 3px solid hsl(185, 75%, 39%);
+}

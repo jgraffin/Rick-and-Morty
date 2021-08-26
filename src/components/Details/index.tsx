@@ -149,7 +149,7 @@ const Details = ({ data }: any) => {
               <img src={character.image} alt={character.name} />
             </figure>
           </article>
-          <article className="character-acts">
+          <article>
             <nav className="m-accordion">
               <nav className="m-accordion__drop-down-menu">
                 <input
