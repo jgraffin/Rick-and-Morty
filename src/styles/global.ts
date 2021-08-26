@@ -34,6 +34,15 @@ const scaleIn = keyframes`
   }
 `;
 
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
 export const Container = styled.div`
   display: block;
   margin: 3rem auto;
@@ -90,7 +99,12 @@ export const ContainerInner = styled.div`
     }
 
     &:last-of-type {
+      ul.list-specification {
+        animation: ${fadeIn} ease-in-out 0.4s forwards;
+      }
+
       h3 {
+        margin-bottom: 1rem;
         &:last-of-type {
           margin-top: 1rem;
         }
@@ -104,29 +118,31 @@ export const ContainerInner = styled.div`
         }
 
         &--head {
-          &::before,
-          &::after {
-            content: "";
-            height: 30px;
-            width: 99%;
-            background: linear-gradient(
-              to bottom,
-              rgba(255, 255, 255, 1) 0%,
-              rgba(255, 255, 255, 0) 100%
-            );
-            position: absolute;
-            bottom: -36px;
-            left: 0;
-          }
+          &.has-list {
+            &::before,
+            &::after {
+              content: "";
+              height: 30px;
+              width: 99%;
+              background: linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 1) 0%,
+                rgba(255, 255, 255, 0) 100%
+              );
+              position: absolute;
+              bottom: -36px;
+              left: 0;
+            }
 
-          &::after {
-            bottom: auto;
-            top: 180px;
-            background: linear-gradient(
-              to bottom,
-              rgba(255, 255, 255, 0) 0%,
-              rgba(255, 255, 255, 1) 100%
-            );
+            &::after {
+              bottom: auto;
+              top: 180px;
+              background: linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 1) 100%
+              );
+            }
           }
         }
       }
@@ -167,7 +183,7 @@ export const ContainerInner = styled.div`
       display: block;
       padding: 1rem 1.5rem;
       border-radius: 90px;
-      margin: 5rem 0 2rem;
+      margin: 5rem 0 1rem;
       color: #ffffff;
       font-weight: 700;
     }
@@ -220,7 +236,6 @@ export const ContainerInner = styled.div`
       .activate:checked ~ .drop-down {
         animation: ${slideIn} ease-in-out 0.6s forwards;
         max-height: 210px;
-        margin-top: 1rem;
       }
 
       .activate {

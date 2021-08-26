@@ -23,7 +23,7 @@ const Details = ({ data }: any) => {
     try {
       fetch(urlData)
         .then((res) => res.json())
-        .then((data: EpisodesTypeProps & LocationsTypeProps) => {
+        .then(async (data: EpisodesTypeProps & LocationsTypeProps) => {
           if (data.air_date !== undefined) {
             containerEpisodes.current.innerHTML += `
               <ul class='list-specification'>
@@ -150,33 +150,51 @@ const Details = ({ data }: any) => {
             </figure>
           </article>
           <article>
-            <nav className="m-accordion">
-              <nav className="m-accordion__drop-down-menu">
-                <input
-                  type="checkbox"
-                  className="activate"
-                  id="acc-01"
-                  name="acc-01"
-                />
-                <label htmlFor="acc-01" className="menu-title">
-                  {switchTitleText(counter > 1)}
-                </label>
-                <div className="drop-down">
-                  <ul className="list-specification list-specification--head">
-                    <li>
-                      <strong>Name</strong>
-                    </li>
-                    <li>
-                      <strong>Episode</strong>
-                    </li>
-                    <li>
-                      <strong>Air date</strong>
-                    </li>
-                  </ul>
-                  <div className="container" ref={containerEpisodes}></div>
+            {counter > 1 ? (
+              <div className="m-accordion">
+                <div className="m-accordion__drop-down-menu">
+                  <input
+                    type="checkbox"
+                    className="activate"
+                    id="accordion"
+                    name="accordion"
+                  />
+                  <label htmlFor="accordion" className="menu-title">
+                    {switchTitleText(counter > 1)}
+                  </label>
+                  <div className="drop-down">
+                    <ul className="list-specification list-specification--head has-list">
+                      <li>
+                        <strong>Name</strong>
+                      </li>
+                      <li>
+                        <strong>Episode</strong>
+                      </li>
+                      <li>
+                        <strong>Air date</strong>
+                      </li>
+                    </ul>
+                    <div className="container" ref={containerEpisodes}></div>
+                  </div>
                 </div>
-              </nav>
-            </nav>
+              </div>
+            ) : (
+              <>
+                <h3>{switchTitleText(counter > 1)}</h3>
+                <ul className="list-specification list-specification--head">
+                  <li>
+                    <strong>Name</strong>
+                  </li>
+                  <li>
+                    <strong>Episode</strong>
+                  </li>
+                  <li>
+                    <strong>Air date</strong>
+                  </li>
+                </ul>
+                <div className="container" ref={containerEpisodes}></div>
+              </>
+            )}
           </article>
 
           {hasLocation && (
