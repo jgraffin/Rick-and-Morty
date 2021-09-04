@@ -1,7 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { Container, ContainerInner, GoBackButton } from "../../styles/global";
+import {
+  Container,
+  ContainerInner,
+  GoBackButton,
+  Modal,
+  CloseModal,
+} from "../../styles/global";
 import { ReactComponent as GoBackIcon } from "./../../images/arrow-left.svg";
+import { ReactComponent as CloseModalIcon } from "./../../images/window-close.svg";
 import { CharactersListType } from "../../interface/CharactersListType";
 import { EpisodesTypeProps } from "../../interface/EpisodesType";
 import { LocationsTypeProps } from "../../interface/LocationsType";
@@ -14,9 +21,14 @@ const Details = ({ data }: any) => {
   const { id } = useParams() as any;
   const [counter, setCounter] = useState(0);
   const [character, setCharacter] = useState(id);
+  const [isModalOpened, setIsModalOpened] = useState(false);
 
   const handleGoBack = () => {
     history.push("/");
+  };
+
+  const handleModal = () => {
+    setIsModalOpened(false);
   };
 
   const getUrlData = (urlData: string) => {
@@ -111,112 +123,126 @@ const Details = ({ data }: any) => {
   }, [character]);
 
   return (
-    <Container>
-      <ContainerInner>
-        <GoBackButton onClick={handleGoBack}>
-          <GoBackIcon />
-        </GoBackButton>
-        <section>
-          <h1>{character.name}</h1>
-          <article>
-            <ul className="list-specification">
-              <li>
-                <strong>Specie</strong>
-                <span>{character.species}</span>
-              </li>
-              <li>
-                <strong>Gender</strong>
-                <span>{character.gender}</span>
-              </li>
-              <li>
-                <strong>Status</strong>
-                <span>{character.status}</span>
-              </li>
-              <li>
-                <strong>Location</strong>
-                <span>{character.location}</span>
-              </li>
-              <li>
-                <strong>Origin</strong>
-                <span>{character.origin}</span>
-              </li>
-              <li>
-                <strong>Type</strong>
-                <span>{getCharacterPropertyType(character.type)}</span>
-              </li>
-            </ul>
+    <>
+      {isModalOpened && (
+        <Modal>
+          <div className="modal-content">
+            <CloseModal onClick={handleModal}>
+              <CloseModalIcon />
+            </CloseModal>
             <figure>
               <img src={character.image} alt={character.name} />
             </figure>
-          </article>
-          <article>
-            {counter > 2 ? (
-              <div className="m-accordion">
-                <div className="m-accordion__drop-down-menu">
-                  <input
-                    type="checkbox"
-                    className="activate"
-                    id="accordion"
-                    name="accordion"
-                  />
-                  <label htmlFor="accordion" className="menu-title">
-                    {switchTitleText(counter > 1)}
-                  </label>
-                  <div className="drop-down">
-                    <ul className="list-specification list-specification--head has-list">
-                      <li>
-                        <strong>Name</strong>
-                      </li>
-                      <li>
-                        <strong>Episode</strong>
-                      </li>
-                      <li>
-                        <strong>Air date</strong>
-                      </li>
-                    </ul>
-                    <div className="container" ref={containerEpisodes}></div>
+          </div>
+        </Modal>
+      )}
+      <Container>
+        <ContainerInner>
+          <GoBackButton onClick={handleGoBack}>
+            <GoBackIcon />
+          </GoBackButton>
+          <section>
+            <h1>{character.name}</h1>
+            <article>
+              <ul className="list-specification">
+                <li>
+                  <strong>Specie</strong>
+                  <span>{character.species}</span>
+                </li>
+                <li>
+                  <strong>Gender</strong>
+                  <span>{character.gender}</span>
+                </li>
+                <li>
+                  <strong>Status</strong>
+                  <span>{character.status}</span>
+                </li>
+                <li>
+                  <strong>Location</strong>
+                  <span>{character.location}</span>
+                </li>
+                <li>
+                  <strong>Origin</strong>
+                  <span>{character.origin}</span>
+                </li>
+                <li>
+                  <strong>Type</strong>
+                  <span>{getCharacterPropertyType(character.type)}</span>
+                </li>
+              </ul>
+              <figure onClick={() => setIsModalOpened(true)}>
+                <img src={character.image} alt={character.name} />
+              </figure>
+            </article>
+            <article>
+              {counter > 2 ? (
+                <div className="m-accordion">
+                  <div className="m-accordion__drop-down-menu">
+                    <input
+                      type="checkbox"
+                      className="activate"
+                      id="accordion"
+                      name="accordion"
+                    />
+                    <label htmlFor="accordion" className="menu-title">
+                      {switchTitleText(counter > 1)}
+                    </label>
+                    <div className="drop-down">
+                      <ul className="list-specification list-specification--head has-list">
+                        <li>
+                          <strong>Name</strong>
+                        </li>
+                        <li>
+                          <strong>Episode</strong>
+                        </li>
+                        <li>
+                          <strong>Air date</strong>
+                        </li>
+                      </ul>
+                      <div className="container" ref={containerEpisodes}></div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <>
-                <h3>{switchTitleText(counter > 1)}</h3>
+              ) : (
+                <>
+                  <h3>{switchTitleText(counter > 1)}</h3>
+                  <ul className="list-specification list-specification--head">
+                    <li>
+                      <strong>Name</strong>
+                    </li>
+                    <li>
+                      <strong>Episode</strong>
+                    </li>
+                    <li>
+                      <strong>Air date</strong>
+                    </li>
+                  </ul>
+                  <div className="container" ref={containerEpisodes}></div>
+                </>
+              )}
+            </article>
+
+            {hasLocation && (
+              <article>
+                <h3>Location</h3>
                 <ul className="list-specification list-specification--head">
                   <li>
                     <strong>Name</strong>
                   </li>
                   <li>
-                    <strong>Episode</strong>
+                    <strong>Dimension</strong>
                   </li>
                   <li>
-                    <strong>Air date</strong>
+                    <strong>Type</strong>
                   </li>
                 </ul>
-                <div className="container" ref={containerEpisodes}></div>
-              </>
+                <div className="container" ref={containerLocations}></div>
+              </article>
             )}
-          </article>
-
-          {hasLocation && (
-            <article>
-              <h3>Location</h3>
-              <ul className="list-specification list-specification--head">
-                <li>
-                  <strong>Name</strong>
-                </li>
-                <li>
-                  <strong>Dimension</strong>
-                </li>
-                <li>
-                  <strong>Type</strong>
-                </li>
-              </ul>
-              <div className="container" ref={containerLocations}></div>
-            </article>
-          )}
-        </section>
-      </ContainerInner>
-    </Container>
+          </section>
+        </ContainerInner>
+      </Container>
+    </>
   );
 };
 

@@ -300,8 +300,16 @@ export const ContainerInner = styled.div`
       top: 0;
       border-bottom-left-radius: 45px;
       overflow: hidden;
+      cursor: pointer;
+
+      &:hover {
+        img {
+          opacity: 0.8;
+        }
+      }
 
       img {
+        transition: ease-in-out 0.3s;
         display: block;
         width: 18rem;
       }
@@ -375,6 +383,58 @@ export const PaginateButton = styled.button`
   &.next {
     right: 50px;
   }
+
+  &:hover {
+    transform: scale(1.2);
+  }
+`;
+
+export const Modal = styled.div`
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  position: fixed;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  left: 0;
+  top: 0;
+
+  .modal-content {
+    animation: ${slideIn} ease-in-out 0.3s forwards;
+    width: 600px;
+    display: block;
+    padding: 2rem;
+    border-radius: 12px;
+    background-color: #ffffff;
+    margin: 0 2rem;
+    position: relative;
+
+    figure {
+      display: block;
+      width: 100%;
+
+      img {
+        width: 100%;
+        display: block;
+      }
+    }
+  }
+`;
+
+export const CloseModal = styled.button`
+  width: 4rem;
+  height: 4rem;
+  background-color: #222222;
+  position: absolute;
+  right: -1.8rem;
+  top: -1.8rem;
+  border-radius: 90px;
+  border: 0;
+  transition: ease-in-out 0.2s;
+  cursor: pointer;
 
   &:hover {
     transform: scale(1.2);
