@@ -350,3 +350,33 @@ export const GoBackButton = styled.button`
     }
   }
 `;
+
+export const PaginateButton = styled.button`
+  width: 70px;
+  height: 70px;
+  background-color: #222222;
+  position: fixed;
+  top: 50%;
+  margin-top: -35px;
+  z-index: 1;
+  border-radius: 90px;
+  border: 0;
+  color: #f4f4f4;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1rem;
+  cursor: pointer;
+  transition: ease-in-out 0.3s;
+
+  &.prev {
+    left: 50px;
+  }
+
+  &.next {
+    right: 50px;
+  }
+
+  &:hover {
+    transform: scale(1.2);
+  }
+`;

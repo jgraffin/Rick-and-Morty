@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { allCharacters } from "./services";
-import { Container } from "./styles/global";
+import { Container, PaginateButton } from "./styles/global";
 import {
   BrowserRouter as Router,
   Switch,
@@ -14,20 +14,25 @@ import { CharactersListType } from "./interface/CharactersListType";
 
 const App: React.FC = () => {
   const [state, setState] = useState<CharactersListType[]>([]);
+  const [page, setPage] = useState(0);
+
+  const handleNext = () => {
+    setPage(page + 1);
+  };
+
+  const handlePrev = () => {
+    setPage(page - 1);
+  };
 
   useEffect(() => {
-    function fetchData() {
-      fetch(allCharacters).then(async (response) => {
-        try {
-          const data = await response.json();
-          setState(data.results);
-        } catch (error) {
-          console.error("error", error);
-        }
+    const fetchPageData = () => {
+      fetch(`${allCharacters}?page=${page}`).then(async (response) => {
+        const { results } = await response.json();
+        setState(results);
       });
-    }
-    fetchData();
-  }, []);
+    };
+    fetchPageData();
+  }, [page]);
 
   if (!state || !state.length) return <>Loading cards...</>;
 
@@ -56,6 +61,16 @@ const App: React.FC = () => {
                 );
               })}
             </Cards>
+            {page > 1 && (
+              <PaginateButton className="prev" onClick={handlePrev}>
+                Prev
+              </PaginateButton>
+            )}
+            {page < 34 && (
+              <PaginateButton className="next" onClick={handleNext}>
+                Next
+              </PaginateButton>
+            )}
           </Route>
           <Route exact path="/character/detail/:id">
             <Details data={state} />

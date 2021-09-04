@@ -1,4 +1,15 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
 
 export const Item = styled.li`
   min-width: 10rem;
@@ -17,8 +28,8 @@ export const Item = styled.li`
     position: relative;
     background-color: #ffffff;
     transition: ease-in-out 0.2s;
-    will-change: contents;
     text-decoration: none;
+    min-height: 19rem;
 
     &::before {
       width: 100%;
@@ -45,6 +56,7 @@ export const Item = styled.li`
       z-index: 2;
       margin-top: 3rem;
       margin-bottom: 1rem;
+      background: #f4f4f4;
 
       img {
         display: block;
@@ -53,6 +65,7 @@ export const Item = styled.li`
         transition: ease-in-out 0.4s;
         will-change: contents;
         filter: grayscale(1);
+        animation: ${fadeIn} ease-in-out 0.2s forwards;
       }
     }
 
@@ -67,7 +80,10 @@ export const Item = styled.li`
     }
 
     &__title {
-      margin-bottom: 0.2rem;
+      display: block;
+      margin-bottom: 0.4rem;
+      padding: 0 1rem;
+      text-align: center;
 
       h2 {
         font-weight: 300;
@@ -126,4 +142,5 @@ export const CardWrapper = styled.ul`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 2rem;
+  will-change: unset;
 `;

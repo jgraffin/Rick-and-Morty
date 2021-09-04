@@ -150,7 +150,7 @@ const Details = ({ data }: any) => {
             </figure>
           </article>
           <article>
-            {counter > 1 ? (
+            {counter > 2 ? (
               <div className="m-accordion">
                 <div className="m-accordion__drop-down-menu">
                   <input
