@@ -375,6 +375,7 @@ export const PaginateButton = styled.button`
   letter-spacing: 0.1rem;
   cursor: pointer;
   transition: ease-in-out 0.3s;
+  z-index: 5;
 
   &.prev {
     left: 50px;
@@ -382,6 +383,24 @@ export const PaginateButton = styled.button`
 
   &.next {
     right: 50px;
+  }
+
+  &.first,
+  &.last {
+    width: 50px;
+    height: 50px;
+    font-size: 0.7rem;
+    background-color: crimson;
+  }
+
+  &.first {
+    left: 60px;
+    margin-top: 45px;
+  }
+
+  &.last {
+    right: 60px;
+    margin-top: 45px;
   }
 
   &:hover {

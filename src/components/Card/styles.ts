@@ -64,7 +64,6 @@ export const Item = styled.li`
         border-radius: 90px;
         transition: ease-in-out 0.4s;
         will-change: contents;
-        filter: grayscale(1);
         animation: ${fadeIn} ease-in-out 0.2s forwards;
       }
     }
@@ -75,7 +74,6 @@ export const Item = styled.li`
 
       img {
         transform: scale(1.1);
-        filter: grayscale(0);
       }
     }
 
